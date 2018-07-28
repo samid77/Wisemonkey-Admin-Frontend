@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import Header from './Header';
+import EditCategory from './EditCategory';
 import axios from 'axios';
 
 class Category extends Component {
@@ -46,7 +47,7 @@ class Category extends Component {
             <td>{namaKategori}</td>
             <td>{deskripsiKategori}</td>
             <td>
-                <button className="btn btn-flat btn-md btn-warning"><i className="fa fa-pencil"></i></button>&nbsp;
+                <Link to={{pathname: '/editcategory',state: {IDcategory: IDcategory}}} className="btn btn-flat btn-md btn-warning"><i className="fa fa-pencil"></i></Link>&nbsp;
                 <button type="button" onClick={() => { if (window.confirm('Hapus data ini?')) this.deleteCategory(IDcategory) } } className="btn btn-flat btn-md btn-danger"><i className="fa fa-remove"></i> </button>
             </td>
         </tr>
