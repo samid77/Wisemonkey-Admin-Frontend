@@ -41,6 +41,13 @@ class Category extends Component {
       })
       window.location.reload();
   }
+  saveSubCategoryData = (e) => {
+    axios.post(`http://localhost:8003/saveSubCategoryData`, {
+        subcategoryname: e.subcategoryname.value,
+        categoryid: this.category.value,
+    });
+    window.location.reload();
+  }
   render() {
     const selectCategory = this.state.selectCategory.map((isi, index) => {
         var urutan = index + 1;
@@ -242,7 +249,7 @@ class Category extends Component {
                                         </div>
                                         <div className="form-group">
                                             <label>Select Category</label>
-                                            <select className="form-control">
+                                            <select className="form-control" ref={select => this.category = select} name="category">
                                                 {selectCategory}
                                             </select>
                                         </div>
@@ -252,7 +259,7 @@ class Category extends Component {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-warning btn-flat btn-md pull-left" data-dismiss="modal">Close</button>
-                            <button type="button" onClick={()=> this.saveData(this.refs)} className="btn btn-flat btn-md btn-primary"><i className="fa fa-paper-plane"></i> Save</button>
+                            <button type="button" onClick={()=> this.saveSubCategoryData(this.refs)} className="btn btn-flat btn-md btn-primary"><i className="fa fa-paper-plane"></i> Save</button>
                         </div>
                     </div>
                     {/* /.modal-content */}
