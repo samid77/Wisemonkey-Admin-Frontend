@@ -8,13 +8,20 @@ class Category extends Component {
   state = {
       categories: [],
       subcategories: [],
-      
+      selectCategory: [],
   }
   componentDidMount() {
       axios.get(`http://localhost:8003/getCatData`).then((getData) => {
           console.log(getData.data);
           this.setState({
               categories: getData.data,
+          });
+      });
+      axios.get(`http://localhost:8003/getSubCatData`).then((subCatData) => {
+          console.log(subCatData.data[0]);
+          this.setState({
+              subcategories: subCatData.data[0],
+              selectCategory: subCatData.data[1],
           });
       });
   }
@@ -35,6 +42,12 @@ class Category extends Component {
       window.location.reload();
   }
   render() {
+    const selectCategory = this.state.selectCategory.map((isi, index) => {
+        var urutan = index + 1;
+        var categoryID = isi.id;
+        var categoryName = isi.category_name;
+        return <option key={index} value={categoryID}>{categoryName}</option>
+    });
     const CategoryData = this.state.categories.map((isi, index) => {
         var urutan = index + 1;
         var IDcategory = isi.id;
@@ -49,6 +62,22 @@ class Category extends Component {
             <td>
                 <Link to={{pathname: '/editcategory',state: {IDcategory: IDcategory}}} className="btn btn-flat btn-md btn-warning"><i className="fa fa-pencil"></i></Link>&nbsp;
                 <button type="button" onClick={() => { if (window.confirm('Hapus data ini?')) this.deleteCategory(IDcategory) } } className="btn btn-flat btn-md btn-danger"><i className="fa fa-remove"></i> </button>
+            </td>
+        </tr>
+    })
+    const SubCategoryData = this.state.subcategories.map((isi, index) => {
+        var urutan = index + 1;
+        var IDsubcategory = isi.subcatid;
+        var subCategoryName = isi.subcategory_name;
+        var categoryName = isi.category_name;
+        
+        return <tr key={index}>
+            <td>{urutan}</td>
+            <td>{subCategoryName}</td>
+            <td>{categoryName}</td>
+            <td>
+                <Link to={{pathname: '/editsubcategory',state: {IDsubcategory: IDsubcategory}}} className="btn btn-flat btn-md btn-warning"><i className="fa fa-pencil"></i></Link>&nbsp;
+                <button type="button" onClick={() => { if (window.confirm('Hapus data ini?')) this.deleteSubCategory(IDsubcategory) } } className="btn btn-flat btn-md btn-danger"><i className="fa fa-remove"></i> </button>
             </td>
         </tr>
     })
@@ -128,34 +157,23 @@ class Category extends Component {
                             {/* /.box-header */}
                             <div className="box-body">
                                 <button data-toggle="modal" data-target="#modal-default-subcategory" className="btn btn-primary btn-flat btn-md" style={{marginBottom: '20px'}}><i className="fa fa-plus-circle"></i> Add Sub Category Data</button>
-                                <table id="example2" className="table table-bordered table-striped">
+                                <table id="example3" className="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
-                                            <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
+                                            <th>Sub Category</th>
+                                            <th>Category</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                          <td>1</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                        </tr>
+                                        {SubCategoryData}
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
-                                            <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
+                                            <th>Sub Category</th>
+                                            <th>Category</th>
                                             <th>Actions</th>
                                         </tr>
                                     </tfoot>
@@ -225,8 +243,7 @@ class Category extends Component {
                                         <div className="form-group">
                                             <label>Select Category</label>
                                             <select className="form-control">
-                                                <option>Category 1</option>
-                                                <option>Category 2</option>
+                                                {selectCategory}
                                             </select>
                                         </div>
                                     </div>

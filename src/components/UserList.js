@@ -4,7 +4,34 @@ import Header from './Header';
 import axios from 'axios';
 
 class UserList extends Component {
+  state = {
+      userData: [],
+  }
+  componentDidMount() {
+      axios.get(`http://localhost:8003/getUsers`).then((getData) => {
+          this.setState({
+              userData: getData.data,
+          })
+      })
+  }
   render() {
+    const userData = this.state.userData.map(((isi, index) => {
+        var urutan = index + 1;
+        var IDuser = isi.id;
+        var name = isi.full_name;
+        var email = isi.email;
+        var username = isi.username;
+        return <tr>
+            <td>{urutan}</td>
+            <td>{name}</td>
+            <td>{email}</td>
+            <td>{username}</td>
+            <td>
+                <Link to={{pathname: '/edituser',state: {IDuser: IDuser}}} className="btn btn-flat btn-md btn-warning"><i className="fa fa-pencil"></i></Link>&nbsp;
+                <button type="button" onClick={() => { if (window.confirm('Hapus data ini?')) this.deleteCategory(IDuser) } } className="btn btn-flat btn-md btn-danger"><i className="fa fa-remove"></i> </button>
+            </td>
+        </tr>
+    }));
     return (
       <div>
         <Header />
@@ -27,35 +54,26 @@ class UserList extends Component {
                             </div>
                             {/* /.box-header */}
                             <div className="box-body">
-                                <button data-toggle="modal" data-target="#modal-default" className="btn btn-primary btn-flat btn-md" style={{marginBottom: '20px'}}><i className="fa fa-plus-circle"></i> Add Product Data</button>
+                                <button data-toggle="modal" data-target="#modal-default" className="btn btn-primary btn-flat btn-md" style={{marginBottom: '20px'}}><i className="fa fa-plus-circle"></i> Add User Data</button>
                                 <table id="example2" className="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
-                                            <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Email</th>
+                                            <th>Email</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                          <td>1</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                        </tr>
+                                        {userData}
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
-                                            <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Email</th>
+                                            <th>Email</th>
                                             <th>Actions</th>
                                         </tr>
                                     </tfoot>

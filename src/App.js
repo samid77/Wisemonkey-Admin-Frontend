@@ -9,6 +9,7 @@ import ItemList from './components/ItemList';
 import UserList from './components/UserList';
 import EditForm from './components/EditForm';
 import EditCategory from './components/EditCategory';
+import EditSubCategory from './components/EditSubCategory';
 import InvoiceHistory from './components/InvoiceHistory';
 import SalesHistory from './components/SalesHistory';
 
@@ -26,6 +27,7 @@ class App extends Component {
         <Route path="/invoicehistory" component={InvoiceHistory} />
         <Route path="/saleshistory" component={SalesHistory} />
         <Route path="/editcategory" component={EditCategory} />
+        <Route path="/editsubcategory" component={EditSubCategory} />
       </div>
     );
   }
