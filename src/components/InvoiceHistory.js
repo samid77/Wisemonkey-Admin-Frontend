@@ -4,7 +4,41 @@ import Header from './Header';
 import axios from 'axios';
 
 class InvoiceHistory extends Component {
+  state = {
+      invoiceList: [],
+  }
+  componentDidMount() {
+      axios.get(`http://localhost:8003/invoiceHistory`).then((getData) => {
+          this.setState({
+              invoiceList: getData.data,
+          });
+      })
+  }
   render() {
+    const invoiceHistory = this.state.invoiceList.map((isi, index) => {
+        var urutan = index + 1;
+        var id = isi.id;
+        var invoiceNumber = isi.invoice_number;
+        var status = isi.status;
+        if(status === 1){
+            var statusLabel = <small class="label bg-green">Success</small>
+        }else if(status === 2){
+            var statusLabel = <small class="label bg-warning">Pending</small>
+        }else if(status === 3){
+            var statusLabel = <small class="label bg-red">Failed</small>
+        }
+        var transactionTime = isi.transaction_time;
+
+        return <tr key={index}>
+            <td>{urutan}</td>
+            <td>{invoiceNumber}</td>
+            <td>{statusLabel}</td>
+            <td>{transactionTime}</td>
+            <td>
+                <button className="btn btn-md btn-flat btn-success"><i className="fa fa-eye"></i> Detail</button>
+            </td>
+        </tr>
+    })
     return (
       <div>
         <Header />
@@ -27,35 +61,26 @@ class InvoiceHistory extends Component {
                             </div>
                             {/* /.box-header */}
                             <div className="box-body">
-                                <button data-toggle="modal" data-target="#modal-default" className="btn btn-primary btn-flat btn-md" style={{marginBottom: '20px'}}><i className="fa fa-plus-circle"></i> Add Product Data</button>
+                                <button data-toggle="modal" data-target="#modal-default" className="btn btn-primary btn-flat btn-md" style={{marginBottom: '20px'}}><i className="fa fa-print"></i> Print Invoice History</button>
                                 <table id="example2" className="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
-                                            <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
+                                            <th>Invoice Number</th>
+                                            <th>Status</th>
+                                            <th>Transaction Time</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                          <td>1</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                        </tr>
+                                        {invoiceHistory}
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
-                                            <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
+                                            <th>Invoice Number</th>
+                                            <th>Status</th>
+                                            <th>Transaction Time</th>
                                             <th>Actions</th>
                                         </tr>
                                     </tfoot>

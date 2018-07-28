@@ -48,6 +48,14 @@ class Category extends Component {
     });
     window.location.reload();
   }
+  deleteSubCategory = (e) => {
+    var self = this;
+    axios.post(`http://localhost:8003/deleteSubCategory`, {id: e}).then((response) => {
+        var serverResponse = response.data;
+        console.log(serverResponse);
+    })
+    window.location.reload();
+}
   render() {
     const selectCategory = this.state.selectCategory.map((isi, index) => {
         var urutan = index + 1;
