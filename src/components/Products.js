@@ -6,6 +6,8 @@ import axios from 'axios';
 class Products extends Component {
   state = {
       dataproduk: [],
+      categorylist: [],
+      subcategorylist: [],
       alert: null,
   }
   componentDidMount() {
@@ -13,7 +15,9 @@ class Products extends Component {
         .then((getData) => {
             console.log(getData.data);
             this.setState({
-                dataproduk: getData.data,
+                dataproduk: getData.data[0],
+                categorylist: getData.data[1],
+                subcategorylist: getData.data[2],
             });
         });
   }
@@ -22,10 +26,24 @@ class Products extends Component {
         productname: e.productname.value,
         productcode: e.productcode.value,
         price: e.price.value,
-        description: e.productdescription.value
+        description: e.productdescription.value,
+        subcategoryid: this.subcategory.value,
     });
+    window.location.reload();
   }
   render() {
+    const categoryList = this.state.categorylist.map((isi, index) => {
+        var urutan = index + 1;
+        var categoryID = isi.id;
+        var categoryName = isi.category_name;
+        return <option key={index} value={categoryID}>{categoryName}</option>
+    });
+    const subCategoryList = this.state.subcategorylist.map((isi, index) => {
+        var urutan = index + 1;
+        var subCategoryID = isi.subcatid;
+        var subCategoryName = isi.subcategory_name;
+        return <option key={index} value={subCategoryID}>{subCategoryName}</option>
+    })
     const data = this.state.dataproduk.map(
         (d, index) => {
             var number = index + 1;
@@ -131,25 +149,14 @@ class Products extends Component {
                                             <input className="form-control" ref="price" placeholder="Product Price" type="text"/>
                                         </div>
                                         <div className="form-group">
-                                            <label>Category</label>
-                                            <select className="form-control">
-                                                <option>Category 1</option>
-                                                <option>Category 2</option>
-                                                <option>Category 3</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group">
                                             <label>Sub Category</label>
-                                            <select className="form-control">
-                                                <option>Sub Category 1</option>
-                                                <option>Sub Category 2</option>
-                                                <option>Sub Category 3</option>
+                                            <select className="form-control" ref={select => this.subcategory = select} name="subcategory">
+                                                {subCategoryList}
                                             </select>
                                         </div>
                                         <div className="form-group">
                                             <label>Product Description</label>
-                                            <textarea ref="productdescription" className="textarea" placeholder="Place some text here"
-                                            style={{width: '100%', height: '200px',lineHeight: '18px', border: '1px solid #dddddd',padding: '10px'}}></textarea>
+                                            <input type="text" ref="productdescription" placeholder="Product Description" style={{width: '100%', height: '50px',lineHeight: '18px', border: '1px solid #dddddd',padding: '10px'}}/>
                                         </div>
                                         <div className="form-group">
                                             <label>File input</label>

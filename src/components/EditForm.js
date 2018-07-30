@@ -65,7 +65,7 @@ class EditForm extends Component {
                                     </div>
                                     <div className="form-group">
                                         <label>Product Description</label>
-                                        <textarea id="editor1" ref="productdescription" name="editor1" rows="10" cols="80" Value={this.state.description} className="form-control"></textarea>
+                                        <input type="text" ref="productdescription" className="form-control" defaultValue={this.state.deskripsi} style={{width: '100%', height: '50px',lineHeight: '18px', border: '1px solid #dddddd',padding: '10px'}}/>
                                     </div>
                                     <div className="form-group">
                                         <label>File input</label>
