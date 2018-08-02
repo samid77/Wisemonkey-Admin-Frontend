@@ -164,6 +164,12 @@ class Header extends Component {
                             </Link>
                         </li>
                         <li>
+                            <Link to="/fileupload">
+                                <i className="fa fa-file" />
+                                <span>File Upload Test</span>
+                            </Link>
+                        </li>
+                        <li>
                             <Link to="/invoicehistory">
                                 <i className="fa fa-print" />
                                 <span>Invoice History</span>

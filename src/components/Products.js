@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
+import {render} from 'react-dom';
 import {Link} from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
+
+var componentConfig = {
+ iconFiletypes: ['.pdf', '.jpg', '.png', '.gif', '.jpeg'],
+ showFiletypeIcon: true,
+ postUrl: '/uploadHandler'
+}
 class Products extends Component {
   state = {
       dataproduk: [],
       categorylist: [],
       subcategorylist: [],
       alert: null,
+      redirect: false,
+      selectedFile: null,
+      quantity: [],
   }
   componentDidMount() {
       axios.get(`http://localhost:8003/productlist`)
@@ -18,6 +29,7 @@ class Products extends Component {
                 dataproduk: getData.data[0],
                 categorylist: getData.data[1],
                 subcategorylist: getData.data[2],
+                quantity: getData.data[3],
             });
         });
   }
@@ -30,6 +42,42 @@ class Products extends Component {
         subcategoryid: this.subcategory.value,
     });
     window.location.reload();
+  }
+  deleteData = (e) => {
+      var self = this;
+      axios.post(`http://localhost:8003/deleteData`, {id: e}).then((response) => {
+          var serverResponse = response.data;
+          if(serverResponse === 'oke'){
+                self.setState({
+                    redirect: true,
+                });
+          } else if(serverResponse === 'gagal'){
+                self.setState({
+                    status: 'Data gagal dihapus',
+                });
+          }
+      })
+      window.location.reload();
+  }
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to='/productlist'/>
+    }
+  }
+  fileSelectedHandler =(e) => {
+    console.log(e.target.files[0]);
+    this.setState({
+        selectedFile: e.target.files[0],
+    });
+  }
+  fileUploadHandler = (e) => {
+      const fd = new FormData();
+      fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
+      axios.post(`http://localhost:8003/saveFiles`, fd, {onUploadProgress: progressEvent => {
+          console.log('Upload Progress: '+ Math.round(progressEvent.loaded/ progressEvent.total * 100) + '%');
+      }}).then((response) => {
+          console.log(response);
+      });
   }
   render() {
     const categoryList = this.state.categorylist.map((isi, index) => {
@@ -52,6 +100,12 @@ class Products extends Component {
             var productName = d.product_name;
             var productDescription = d.description;
             var price = d.price;
+            var quantity = this.state.quantity;
+            for(var i=0; i < quantity.length; i++){
+                if(productID === quantity[i].id){
+                    var quantityJos = quantity[i].quantity;
+                }
+            }
 
             return <tr key={index} style={{textAlign: 'center'}}>
             <td>{number}</td>
@@ -59,15 +113,17 @@ class Products extends Component {
             <td>{productName}</td>
             <td>{productDescription}</td>
             <td>{price}</td>
+            <td>{quantityJos}</td>
             <td>
                 <Link to={{pathname: '/editdata', state: {productID: productID}}} className="btn btn-sm btn-flat btn-warning"><i className="fa fa-pencil"></i> </Link>&nbsp;
-                <button className="btn btn-sm btn-flat btn-danger"><i className="fa fa-remove"></i> </button>
+                <button type="button" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteData(productID) }} className="btn btn-sm btn-flat btn-danger"><i className="fa fa-remove"></i> </button>
             </td>
         </tr>
         }
     );
     return (
         <div>
+            {this.renderRedirect()}
             <Header />
             <div className="content-wrapper">
             {/* Content Header (Page header) */}
@@ -98,6 +154,7 @@ class Products extends Component {
                                             <th>Product Name</th>
                                             <th>Description</th>
                                             <th>Price</th>
+                                            <th>Quantity</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -111,6 +168,7 @@ class Products extends Component {
                                             <th>Product Name</th>
                                             <th>Description</th>
                                             <th>Price</th>
+                                            <th>Quantity</th>
                                             <th>Actions</th>
                                         </tr>
                                     </tfoot>
@@ -156,11 +214,11 @@ class Products extends Component {
                                         </div>
                                         <div className="form-group">
                                             <label>Product Description</label>
-                                            <input type="text" ref="productdescription" placeholder="Product Description" style={{width: '100%', height: '50px',lineHeight: '18px', border: '1px solid #dddddd',padding: '10px'}}/>
+                                            <input type="text" ref="productdescription" placeholder="Product Description" style={{width: '100%', height: '50px',lineHeight: '18px', border: '1px solid #dddddd',padding: '10px', wordBreak: 'break-word'}}/>
                                         </div>
                                         <div className="form-group">
                                             <label>File input</label>
-                                            <input type="file" />
+                                            <input type="file" onChange={this.fileSelectedHandler}/>
                                             <p className="help-block">Example block-level help text here.</p>
                                         </div>
                                     </div>
@@ -168,8 +226,9 @@ class Products extends Component {
                             </form>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-warning btn-flat btn-md pull-left" data-dismiss="modal">Close</button>
-                            <button type="button" onClick={()=> this.saveData(this.refs)} className="btn btn-flat btn-md btn-primary"><i className="fa fa-paper-plane"></i> Save</button>
+                            <button type="button" className="btn btn-warning btn-flat btn-md pull-left" data-dismiss="modal"><i className="fa fa-remove"></i> Close</button>
+                            {/* <button type="button" onClick={()=> this.saveData(this.refs)} className="btn btn-flat btn-md btn-primary"><i className="fa fa-paper-plane"></i> Save</button> */}
+                            <button type="button" onClick={()=> this.fileUploadHandler} className="btn btn-flat btn-md btn-primary"><i className="fa fa-paper-plane"></i> Save</button>
                         </div>
                     </div>
                     {/* /.modal-content */}

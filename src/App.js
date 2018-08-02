@@ -12,6 +12,8 @@ import EditCategory from './components/EditCategory';
 import EditSubCategory from './components/EditSubCategory';
 import InvoiceHistory from './components/InvoiceHistory';
 import SalesHistory from './components/SalesHistory';
+import FileUpload from './components/FileUpload';
+import TestAPI from './components/TestAPI';
 
 class App extends Component {
   render() {
@@ -25,9 +27,11 @@ class App extends Component {
         <Route path="/itemlist" component={ItemList} />
         <Route path="/userlist" component={UserList} />
         <Route path="/invoicehistory" component={InvoiceHistory} />
+        <Route path="/fileupload" component={FileUpload} />
         <Route path="/saleshistory" component={SalesHistory} />
         <Route path="/editcategory" component={EditCategory} />
         <Route path="/editsubcategory" component={EditSubCategory} />
+        <Route path="/testapi" component={TestAPI} />
       </div>
     );
   }

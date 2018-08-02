@@ -2,9 +2,38 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
+import { isIP } from 'net';
+import { isObject } from 'util';
 
 class ItemList extends Component {
+  state = {
+      itemlist: [],
+  }
+  componentDidMount() {
+      axios.get(`http://localhost:8003/itemlist`).then((getData) => {
+          console.log(getData.data);
+          this.setState({
+              itemlist: getData.data,
+          });
+      })
+  }
   render() {
+    const itemList = this.state.itemlist.map((isi, index) => {
+        var urutan = index + 1;
+        var id = isi.id;
+        var itemID = isi.item_id;
+        var namaProduk = isi.product_name;
+
+        return <tr key={index} style={{textAlign: 'center'}}>
+        <td>{urutan}</td>
+        <td>{itemID}</td>
+        <td>{namaProduk}</td>
+        <td>
+            <Link to={{pathname: '/editdata', state: {id: id}}} className="btn btn-sm btn-flat btn-warning"><i className="fa fa-pencil"></i> </Link>&nbsp;
+            <button type="button" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteData(id) }} className="btn btn-sm btn-flat btn-danger"><i className="fa fa-remove"></i> </button>
+        </td>
+    </tr>
+    })
     return (
       <div>
         <Header />
@@ -33,30 +62,19 @@ class ItemList extends Component {
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
+                                            <th>Item Code</th>
                                             <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                        </tr>
+                                        {itemList}
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
+                                            <th>Item Code</th>
                                             <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
                                             <th>Actions</th>
                                         </tr>
                                     </tfoot>
