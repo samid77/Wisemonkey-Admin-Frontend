@@ -111,12 +111,12 @@ class Products extends Component {
             <td>{number}</td>
             <td>{productCode}</td>
             <td>{productName}</td>
-            <td>{productDescription}</td>
             <td>{price}</td>
             <td>{quantityJos}</td>
             <td>
-                <Link to={{pathname: '/editdata', state: {productID: productID}}} className="btn btn-sm btn-flat btn-warning"><i className="fa fa-pencil"></i> </Link>&nbsp;
-                <button type="button" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteData(productID) }} className="btn btn-sm btn-flat btn-danger"><i className="fa fa-remove"></i> </button>
+                <Link title="Edit Product" to={{pathname: '/editdata', state: {productID: productID}}} className="btn btn-sm btn-flat btn-warning"><i className="fa fa-pencil"></i> </Link>&nbsp;
+                <button title="Delete Product" type="button" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteData(productID) }} className="btn btn-sm btn-flat btn-danger"><i className="fa fa-remove"></i> </button>&nbsp;
+                <button title="Edit Quantity" data-toggle="modal" data-target="#modal-defaultQuantity" type="button" className="btn btn-success btn-sm btn-flat"><i className="fa fa-cube"></i></button>
             </td>
         </tr>
         }
@@ -152,7 +152,6 @@ class Products extends Component {
                                             <th>No</th>
                                             <th>Product Code</th>
                                             <th>Product Name</th>
-                                            <th>Description</th>
                                             <th>Price</th>
                                             <th>Quantity</th>
                                             <th>Actions</th>
@@ -166,7 +165,6 @@ class Products extends Component {
                                             <th>No</th>
                                             <th>Product Code</th>
                                             <th>Product Name</th>
-                                            <th>Description</th>
                                             <th>Price</th>
                                             <th>Quantity</th>
                                             <th>Actions</th>
@@ -220,6 +218,50 @@ class Products extends Component {
                                             <label>File input</label>
                                             <input type="file" onChange={this.fileSelectedHandler}/>
                                             <p className="help-block">Example block-level help text here.</p>
+                                        </div>
+                                    </div>
+                                    {/* /.box-body */}
+                            </form>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-warning btn-flat btn-md pull-left" data-dismiss="modal"><i className="fa fa-remove"></i> Close</button>
+                            {/* <button type="button" onClick={()=> this.saveData(this.refs)} className="btn btn-flat btn-md btn-primary"><i className="fa fa-paper-plane"></i> Save</button> */}
+                            <button type="button" onClick={()=> this.fileUploadHandler} className="btn btn-flat btn-md btn-primary"><i className="fa fa-paper-plane"></i> Save</button>
+                        </div>
+                    </div>
+                    {/* /.modal-content */}
+                </div>
+                {/* /.modal-dialog */}
+            </div>
+
+            {/* Quantity form */}
+            <div className="modal fade" id="modal-defaultQuantity">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                            <h4 className="modal-title">Edit Quantity</h4>
+                        </div>
+                        <div className="modal-body">
+                            <form role="form">
+                                    <div className="box-body">
+                                        <div className="form-group">
+                                            <label>Product Code</label>
+                                            <input className="form-control" ref="productcode" placeholder="Product Code" type="text" disabled/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Quantity Amount</label>
+                                            <div className="input-group input-group-md col-xs-8">
+                                                <div class="input-group-btn">
+                                                    <button type="button" className="btn btn-warning dropdown-toggle" data-toggle="dropdown"><i className="fa fa-minus-circle"></i></button>
+                                                    
+                                                </div>
+                                                <input type="text" className="form-control" />
+                                                <span className="input-group-btn">
+                                                    <button type="button" className="btn btn-info btn-flat btn-md"><i className="fa fa-plus-circle"></i></button>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     {/* /.box-body */}
