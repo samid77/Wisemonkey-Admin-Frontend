@@ -12,12 +12,61 @@ import { Redirect } from 'react-router-dom';
 
 export default class FileUpload extends Component {
   state = {
-      filesToBeSent: [],
-      filesPreview: [],
-      printcount: 10,
-      files: [],
-      namaFile: [],
-      test: 'test'
+    filesToBeSent: [],
+    filesPreview: [],
+    printcount: 10,
+    files: [],
+    namaFile: [],
+    fotofile: '',
+    fotofile2: '',
+    fotofile3: '',
+    fotofile4: '',
+    testinput1: '',
+    testinput2: '',
+  }
+  onchange = (e) => {
+      switch(e.target.name){
+        case 'fotoproduk':
+            this.setState({
+                fotofile: e.target.files[0],
+            });
+        break;
+        case 'fotoproduk2':
+            this.setState({
+                fotofile2: e.target.files[0],
+            });
+        break;
+        case 'fotoproduk3':
+            this.setState({
+                fotofile3: e.target.files[0],
+            });
+        break;
+        case 'fotoproduk4':
+            this.setState({
+                fotofile4: e.target.files[0],
+            });
+        break;
+        default:
+      }
+  }
+  value = (e) => {
+      this.setState({
+          testinput1: e.testinput1.value,
+          testinput2: e.testinput2.value,
+      });
+  }
+  executeData = (e) => {
+      e.preventDefault();
+      let formData = new FormData();
+        formData.append('filekesatu', this.state.fotofile);
+        formData.append('filekedua', this.state.fotofile2);
+        formData.append('fileketiga', this.state.fotofile3);
+        formData.append('filekeempat', this.state.fotofile4);
+        formData.append('testinput1', this.state.testinput1);
+        formData.append('testinput2', this.state.testinput2);
+
+        axios.post(`http://localhost:8003/uploadfile`, formData);
+        // window.location.reload();
   }
   onDrop2 = (files) => {
       this.setState({
@@ -35,7 +84,7 @@ export default class FileUpload extends Component {
     //   e.preventDefault();
       let fileData = new FormData();
       fileData.append('fileName', this.state.files);
-      axios.post(`http://localhost:8003/uploadfile`, fileData);
+      axios.post(`http://localhost:8003/uploadFile`, fileData);
   }
   onDrop(acceptedFiles, rejectedFiles) {
       console.log('Accepted files: ' + acceptedFiles[0].name);
@@ -74,6 +123,41 @@ export default class FileUpload extends Component {
         <Header />
             <div className="content-wrapper">
                 <section className="content">
+                    <div className="col-md-10 col-md-offset-1">
+                        <div className="box box-primary">
+                            <form onSubmit={this.executeData} encType="multipart/form-data">
+                                <div className="box-body">
+                                    <div className="form-group">
+                                        <label>Input 1</label>
+                                        <input type="text" className="form-control" ref="testinput1"/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Input 2</label>
+                                        <input type="text" className="form-control" ref="testinput2"/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>File I</label>
+                                        <input name="fotoproduk" type="file" className="form-control" onChange={this.onchange}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>File II</label>
+                                        <input name="fotoproduk2" type="file" className="form-control" onChange={this.onchange}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>File III</label>
+                                        <input name="fotoproduk3" type="file" className="form-control" onChange={this.onchange}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>File IV</label>
+                                        <input name="fotoproduk4" type="file" className="form-control" onChange={this.onchange}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <button type="submit" onClick={() => this.value(this.refs)} className="btn btn-flat btn-md btn-success"><i className="fa fa-upload"></i> Upload</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div className="col-md-10 col-md-offset-1">
                         <div className="box box-primary">
                             <div className="box-body">
@@ -120,6 +204,7 @@ export default class FileUpload extends Component {
                                     </div>
                                     {/* /.box-body */}
                                 </form>
+                                <hr style={{border: '1px solid blue'}}/>
                             </div>
                         </div>
                     </div>

@@ -152,6 +152,12 @@ class Header extends Component {
                             </Link>
                         </li>
                         <li>
+                            <Link to="/stockopname">
+                                <i className="fa fa-archive" />
+                                <span>Stock Opname</span>
+                            </Link>
+                        </li>
+                        <li>
                             <Link to="/categorylist">
                                 <i className="fa fa-tags" />
                                 <span>Category List</span>
