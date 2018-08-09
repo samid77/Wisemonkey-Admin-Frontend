@@ -169,12 +169,12 @@ class Header extends Component {
                                 <span>User List</span>
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link to="/fileupload">
                                 <i className="fa fa-file" />
                                 <span>File Upload Test</span>
                             </Link>
-                        </li>
+                        </li> */}
                         <li>
                             <Link to="/invoicehistory">
                                 <i className="fa fa-print" />

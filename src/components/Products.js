@@ -131,6 +131,11 @@ class Products extends Component {
           console.log(response);
       });
   }
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to='/productlist'/>
+    }
+  }
   render() {
     const categoryList = this.state.categorylist.map((isi, index) => {
         var urutan = index + 1;

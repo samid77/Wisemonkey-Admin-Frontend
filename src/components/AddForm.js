@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Header from './Header';
 import axios from 'axios';
+import {Redirect} from 'react-router-dom';
 
 class AddForm extends Component {
   state = {
@@ -15,6 +16,8 @@ class AddForm extends Component {
       fotoproduk2: '',
       fotoproduk3: '',
       fotoproduk4: '',
+      redirect: false,
+      status: '',
   }
   onchange = (e) => {
       switch(e.target.name) {
@@ -63,6 +66,7 @@ class AddForm extends Component {
       });
   }
   saveData = (e) => {
+    var self = this;
     e.preventDefault();
     let formData = new FormData();
       formData.append('productcode', this.state.productcode);
@@ -74,7 +78,23 @@ class AddForm extends Component {
       formData.append('fotoproduk3', this.state.fotoproduk3);
       formData.append('fotoproduk4', this.state.fotoproduk4);
 
-      axios.post(`http://localhost:8003/saveData`, formData);
+      axios.post(`http://localhost:8003/saveData`, formData).then(((response) => {
+          var serverResponse = response.data;
+          if(serverResponse === 'oke') {
+              self.setState({
+                  redirect: true,
+              });
+          } else if(serverResponse === -1){
+            self.setState({
+                status: 'Input data failed',
+            });
+          }
+      }));
+  }
+  renderRedirect = () => {
+    if (this.state.redirect){
+      return <Redirect to='/productlist'/>
+    }
   }
   render() {
     const categoryList = this.state.categorylist.map((isi, index) => {
@@ -91,6 +111,7 @@ class AddForm extends Component {
     })
     return (
       <div>
+          {this.renderRedirect()}
           <Header />
           <div className="content-wrapper">
             <section className="content">
