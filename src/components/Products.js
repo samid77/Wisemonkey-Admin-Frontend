@@ -16,14 +16,8 @@ class Products extends Component {
       dataproduk: [],
       categorylist: [],
       subcategorylist: [],
-      alert: null,
       redirect: false,
-      selectedFile: null,
       quantity: [],
-      fotoproduk1: '',
-      fotoproduk2: '',
-      fotoproduk3: '',
-      fotoproduk4: '',
   }
   componentDidMount() {
       axios.get(`http://localhost:8003/productlist`)
@@ -36,31 +30,6 @@ class Products extends Component {
                 quantity: getData.data[3],
             });
         });
-  }
-  onchange = (e) => {
-      switch(e.target.name){
-          case 'fotoproduk1':
-            this.setState({
-                fotoproduk1: e.target.files[0],
-            });
-          break;
-          case 'fotoproduk2':
-            this.setState({
-                fotoproduk2: e.target.files[0],
-            });
-          break;
-          case 'fotoproduk3':
-            this.setState({
-                fotoproduk3: e.target.files[0],
-            });
-          break;
-          case 'fotoproduk4':
-            this.setState({
-                fotoproduk4: e.target.files[0],
-            });
-          break;
-          default:
-      }
   }
   value = (e) => {
         this.setState({
@@ -86,14 +55,6 @@ class Products extends Component {
     formData.append('fotoproduk4', this.state.fotoproduk4);
 
     axios.post(`http://localhost:8003/saveData`, formData);
-    // axios.post(`http://localhost:8003/saveData`, {
-    //     productcode: e.productcode.value,
-    //     productname: e.productname.value,
-    //     price: e.price.value,
-    //     description: e.productdescription.value,
-    //     subcategoryid: this.subcategory.value,
-    // });
-    // window.location.reload();
   }
   deleteData = (e) => {
       var self = this;
@@ -116,33 +77,12 @@ class Products extends Component {
       return <Redirect to='/productlist'/>
     }
   }
-  fileSelectedHandler =(e) => {
-    console.log(e.target.files[0]);
-    this.setState({
-        selectedFile: e.target.files[0],
-    });
-  }
-  fileUploadHandler = (e) => {
-      const fd = new FormData();
-      fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
-      axios.post(`http://localhost:8003/saveFiles`, fd, {onUploadProgress: progressEvent => {
-          console.log('Upload Progress: '+ Math.round(progressEvent.loaded/ progressEvent.total * 100) + '%');
-      }}).then((response) => {
-          console.log(response);
-      });
-  }
   renderRedirect = () => {
     if (this.state.redirect) {
       return <Redirect to='/productlist'/>
     }
   }
   render() {
-    const categoryList = this.state.categorylist.map((isi, index) => {
-        var urutan = index + 1;
-        var categoryID = isi.id;
-        var categoryName = isi.category_name;
-        return <option key={index} value={categoryID}>{categoryName}</option>
-    });
     const subCategoryList = this.state.subcategorylist.map((isi, index) => {
         var urutan = index + 1;
         var subCategoryID = isi.subcatid;
@@ -156,6 +96,7 @@ class Products extends Component {
             var productCode = d.product_code;
             var productName = d.product_name;
             var productDescription = d.description;
+            var subcategoryid = d.subcategory_id;
             var price = d.price;
             var quantity = this.state.quantity;
             for(var i=0; i < quantity.length; i++){
@@ -171,7 +112,7 @@ class Products extends Component {
             <td>{price}</td>
             <td>{quantityJos}</td>
             <td>
-                <Link title="Edit Product" to={{pathname: '/editdata', state: {productID: productID}}} className="btn btn-sm btn-flat btn-warning"><i className="fa fa-pencil"></i> </Link>&nbsp;
+                <Link title="Edit Product" to={{pathname: '/editdata', state: {productID: productID, subcategoryid: subcategoryid}}} className="btn btn-sm btn-flat btn-warning"><i className="fa fa-pencil"></i> </Link>&nbsp;
                 <button title="Delete Product" type="button" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteData(productID) }} className="btn btn-sm btn-flat btn-danger"><i className="fa fa-remove"></i> </button>&nbsp;
                 <button title="Edit Quantity" data-toggle="modal" data-target="#modal-defaultQuantity" type="button" className="btn btn-success btn-sm btn-flat"><i className="fa fa-cube"></i></button>
             </td>

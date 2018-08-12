@@ -8,10 +8,45 @@ class EditForm extends Component {
       namaproduk: '',
       harga: '',
       deskripsi: '',
-      kodeproduk: ''
+      kodeproduk: '',
+      fotoproduk1: '',
+      fotoproduk2: '',
+      fotoproduk3: '',
+      fotoproduk4: '',
+      redirect: false,
+      status: '',
+      subcategorylistState: '',
+      datasubcategory: [],
   }
+  onchange = (e) => {
+    switch(e.target.name) {
+        case 'fotoproduk1':
+          this.setState({
+              fotoproduk1: e.target.files[0],
+          });
+        break;
+        case 'fotoproduk2':
+          this.setState({
+              fotoproduk2: e.target.files[0],
+          });
+        break;
+        case 'fotoproduk3':
+          this.setState({
+              fotoproduk3: e.target.files[0],
+          });
+        break;
+        case 'fotoproduk4':
+          this.setState({
+              fotoproduk4: e.target.files[0],
+          });
+        break;
+        default:
+    }
+}
   componentDidMount() {
       var id = this.props.location.state.productID;
+      var subcategoryid = this.props.location.state.subcategoryid;
+
       axios.get(`http://localhost:8003/editproduct/`+id)
       .then((result) => {
           console.log(result.data);
@@ -21,20 +56,45 @@ class EditForm extends Component {
             harga: result.data[0].price,
             deskripsi: result.data[0].description,
             kodeproduk: result.data[0].product_code,
+            fotoproduk1: result.data[0].fotoproduk_1,
+            fotoproduk2: result.data[0].fotoproduk_2,
+            fotoproduk3: result.data[0].fotoproduk_3,
+            fotoproduk4: result.data[0].fotoproduk_4,
+            subcategorylistState: result.data[0].subcategory_id,
           });
-
-      })
+      });
+      axios.get(`http://localhost:8003/getSubCatData`).then((result) => {
+          this.setState({
+              datasubcategory: result.data[0]
+          });
+      });
+      
   }
-  updateData = (e) => {
-    axios.post('http://localhost:8003/updateData/', {
+  changeCategory = (e) => {
+      this.setState({
+          subcategoryid: e.target.value,
+      });
+  }
+  value = (e) => {
+    this.setState({
         id: e.productid.value,
-        productname: e.productname.value,
         productcode: e.productcode.value,
-        price: e.price.value,
-        description: e.productdescription.value
+        productname: e.productname.value,
+        productprice: e.productprice.value,
+        productdescription: e.productdescription.value,
+        subcategoryid: e.subCatID.value,
     });
+}
+  updateData = (e) => {
+    axios.post('http://localhost:8003/updateData/');
   }
   render() {
+    const subCategoryList = this.state.datasubcategory.map((isi, index) => {
+        var urutan = index + 1;
+        var subCategoryID = isi.subcatid;
+        var subCategoryName = isi.subcategory_name;
+        return <option key={index} value={subCategoryID}>{subCategoryName}</option>
+    })
     return (
       <div>
           <Header />
@@ -68,10 +128,73 @@ class EditForm extends Component {
                                         <input type="text" ref="productdescription" className="form-control" defaultValue={this.state.deskripsi} style={{width: '100%', height: '50px',lineHeight: '18px', border: '1px solid #dddddd',padding: '10px'}}/>
                                     </div>
                                     <div className="form-group">
-                                        <label>File input</label>
-                                        <input type="file" />
-                                        <p className="help-block">Example block-level help text here.</p>
+                                        <label>Sub Category</label>
+                                        <select className="form-control" ref="subCatID" name="subcategory" value={this.state.subcategorylistState} onChange={this.changeCategory}>
+                                            {subCategoryList}
+                                        </select>
                                     </div>
+                                    <div className="form-group">
+                                        <label>Foto Produk (1)</label>
+                                        <input name="fotoproduk1" type="file" className="form-control" onChange={this.onchange}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Foto Produk (2)</label>
+                                        <input name="fotoproduk2" type="file" className="form-control" onChange={this.onchange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Foto Produk (3)</label>
+                                        <input name="fotoproduk3" type="file" className="form-control" onChange={this.onchange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Foto Produk (4)</label>
+                                        <input name="fotoproduk4" type="file" className="form-control" onChange={this.onchange} />
+                                    </div>
+                                    <ul className="todo-list">
+                                        <li>
+                                            {/* drag handle */}
+                                            <span className="handle">
+                                                <i className="fa fa-ellipsis-v" />
+                                                <i className="fa fa-ellipsis-v" />
+                                            </span>
+                                            {/* checkbox */}
+                                            <input type="checkbox" value={this.state.fotoproduk1} />
+                                            {/* todo text */}
+                                            <span className="text">{this.state.fotoproduk1}</span>
+                                        </li>
+                                        <li>
+                                            {/* drag handle */}
+                                            <span className="handle">
+                                                <i className="fa fa-ellipsis-v" />
+                                                <i className="fa fa-ellipsis-v" />
+                                            </span>
+                                            {/* checkbox */}
+                                            <input type="checkbox" defaultValue />
+                                            {/* todo text */}
+                                            <span className="text">{this.state.fotoproduk2}</span>
+                                        </li>
+                                        <li>
+                                            {/* drag handle */}
+                                            <span className="handle">
+                                                <i className="fa fa-ellipsis-v" />
+                                                <i className="fa fa-ellipsis-v" />
+                                            </span>
+                                            {/* checkbox */}
+                                            <input type="checkbox" defaultValue />
+                                            {/* todo text */}
+                                            <span className="text">{this.state.fotoproduk3}</span>
+                                        </li>
+                                        <li>
+                                            {/* drag handle */}
+                                            <span className="handle">
+                                                <i className="fa fa-ellipsis-v" />
+                                                <i className="fa fa-ellipsis-v" />
+                                            </span>
+                                            {/* checkbox */}
+                                            <input type="checkbox" defaultValue />
+                                            {/* todo text */}
+                                            <span className="text">{this.state.fotoproduk4}</span>
+                                        </li>
+                                    </ul>
                                 </div>
                                 {/* /.box-body */}
                                 <div className="box-footer">
