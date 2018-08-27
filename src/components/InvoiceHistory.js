@@ -7,8 +7,9 @@ class InvoiceHistory extends Component {
   state = {
       invoiceList: [],
   }
-  componentDidMount() {
+  componentWillMount() {
       axios.get(`http://localhost:8003/invoiceHistory`).then((getData) => {
+          console.log(getData.data)
           this.setState({
               invoiceList: getData.data,
           });
@@ -21,22 +22,17 @@ class InvoiceHistory extends Component {
         var invoiceNumber = isi.invoice_number;
         var status = isi.status;
         if(status === 1){
-            var statusLabel = <small class="label bg-green">Success</small>
+            var statusLabel = <small class="label bg-green">Paid</small>
         }else if(status === 2){
-            var statusLabel = <small class="label bg-warning">Pending</small>
-        }else if(status === 3){
-            var statusLabel = <small class="label bg-red">Failed</small>
+            var statusLabel = <small class="label bg-red">Unpaid</small>
         }
-        var transactionTime = isi.transaction_time;
+        var transactionTime = isi.created;
 
         return <tr key={index}>
             <td>{urutan}</td>
-            <td>{invoiceNumber}</td>
+            <td>INV{invoiceNumber}</td>
             <td>{statusLabel}</td>
             <td>{transactionTime}</td>
-            <td>
-                <button className="btn btn-md btn-flat btn-success"><i className="fa fa-eye"></i> Detail</button>
-            </td>
         </tr>
     })
     return (
@@ -69,7 +65,6 @@ class InvoiceHistory extends Component {
                                             <th>Invoice Number</th>
                                             <th>Status</th>
                                             <th>Transaction Time</th>
-                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -81,7 +76,6 @@ class InvoiceHistory extends Component {
                                             <th>Invoice Number</th>
                                             <th>Status</th>
                                             <th>Transaction Time</th>
-                                            <th>Actions</th>
                                         </tr>
                                     </tfoot>
                                 </table>

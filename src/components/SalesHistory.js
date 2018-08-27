@@ -4,7 +4,35 @@ import Header from './Header';
 import axios from 'axios';
 
 class SalesHistory extends Component {
+  state = {
+      salesList: [],
+  }
+  componentWillMount = () => {
+      axios.get('http://localhost:8003/salesHistory').then((getData) => {
+          this.setState({
+              salesList: getData.data
+          });
+      })
+  }
   render() {
+    const salesList = this.state.salesList.map((isi, index) => {
+        var urutan = index + 1;
+        var invoiceNumber = isi.invoice_number;
+        var productName = isi.product_name;
+        var quantity = isi.quantity;
+        var total = isi.total;
+        var created = isi.created;
+
+        return <tr key={urutan}>
+        <td>{urutan}</td>
+        <td>{invoiceNumber}</td>
+        <td>{productName}</td>
+        <td>{quantity}</td>
+        <td>{total}</td>
+        <td>{created}</td>
+      </tr>
+
+    })
     return (
       <div>
         <Header />
@@ -32,31 +60,24 @@ class SalesHistory extends Component {
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
+                                            <th>Invoice Number</th>
                                             <th>Product Name</th>
-                                            <th>Description</th>
+                                            <th>Quantity</th>
                                             <th>Price</th>
-                                            <th>Actions</th>
+                                            <th>Transaction Time</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                          <td>1</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                          <td>CT-001</td>
-                                        </tr>
+                                        {salesList}
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Code</th>
+                                            <th>Invoice Number</th>
                                             <th>Product Name</th>
-                                            <th>Description</th>
+                                            <th>Quantity</th>
                                             <th>Price</th>
-                                            <th>Actions</th>
+                                            <th>Transaction Time</th>
                                         </tr>
                                     </tfoot>
                                 </table>
